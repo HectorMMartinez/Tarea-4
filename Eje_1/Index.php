@@ -29,6 +29,18 @@ if(!$api){
         </div>
     </form>
 </div>
-<iframe name="resultado" style="width:100%; height:300px;">
+<iframe id="resultadoFrame" name="resultado" style="width:100%; border:none; overflow:hidden; display:block;"></iframe>
+<script>
+    function ajustarAlturaIframe() {
+        var iframe = document.getElementById("resultadoFrame");
+        if (iframe && iframe.contentWindow.document.documentElement) {
+            iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + "px";
+            iframe.style.overflow = "hidden"; // Prevents scrollbar inside iframe
+        }
+    }
 
-</iframe>
+    document.getElementById("resultadoFrame").onload = function () {
+        setTimeout(ajustarAlturaIframe, 100);
+    };
+</script>
+

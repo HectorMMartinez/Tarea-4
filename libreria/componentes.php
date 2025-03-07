@@ -19,7 +19,7 @@ function get_lista_apis(){
         ),
         array(
             'nombre'=>'Universidades de un país 🎓',
-            'descripcion'=>'Ingresa un país y muestra las universidades',
+            'descripcion'=>'Ingresa un país en ingles y muestra las universidades',
             'url'=>'Eje_3',
             'api'=>'http://universities.hipolabs.com/search?country='
 

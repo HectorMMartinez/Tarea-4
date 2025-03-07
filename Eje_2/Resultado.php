@@ -1,7 +1,7 @@
 <?php
 require("../libreria/motor.php");
 
-$n=1;
+$n=2;
 $api=(object)get_api($n);
 if(!$api){
     echo '
@@ -25,17 +25,32 @@ $url = $api->api."{$nombre}";
 $respuesta = file_get_contents($url);
 $respuesta = json_decode($respuesta);
 
-if (!$respuesta || !isset($respuesta->gender)) {
+if (!$respuesta || !isset($respuesta->age)) {
     echo "<div class='notification is-danger'><h3 class='title is-4'>❌ Error: No se pudo obtener la información</h3></div>";
     exit();
 }
+$nombre = htmlspecialchars($respuesta->name);
+$edad = $respuesta->age;
+if ($edad <= 18) {
+    $etapa="Joven";
+    $background_color="has-background-info-light";
+    $text_color="has-text-info-dark";
+    $icono="👦";
+    $imagen="../images/Joven.png";
+} elseif ($edad <= 40) {
+    $etapa="Adulto";
+    $background_color="has-background-success-light";
+    $text_color="has-text-success-dark";
+    $icono="🧑";
+    $imagen="../images/Adult.png";
+} else {
+    $etapa="Adulto Mayor";
+    $background_color="has-background-danger-light";
+    $text_color="has-text-danger-dark";
+    $icono="👴";
+    $imagen="../images/Viejo.png";
+}
 
-$esHombre = $respuesta->gender == "male";
-$background_color = $esHombre ? "has-background-info" : "has-background-danger-light"; 
-$text_color = $esHombre ? "has-text-white" : "has-text-danger"; 
-$icono = $esHombre ? "👦" : "👧";
-$genero = $esHombre ? "Hombre" : "Mujer";
-$probabilidad = round($respuesta->probability * 100, 2);
 ?>
 <head>
     <link rel="stylesheet" href="../bulma-1.0.2/bulma/css/bulma.css">
@@ -49,9 +64,13 @@ $probabilidad = round($respuesta->probability * 100, 2);
 <body>
     <div class="box <?= $background_color ?> has-text-centered">
         <h1 class="title is-3 <?= $text_color ?>">Resultado <?= $icono ?></h1>
+        <figure class="image is-128x128 is-inline-block">
+            <img class="is-rounded" src="<?= $imagen ?>" alt="<?= $etapa ?>">
+        </figure>
         <p class="title is-5 <?= $text_color ?>"><strong>Nombre: <?= htmlspecialchars($respuesta->name)?> </strong> </p>
-        <p class="title is-5 <?= $text_color ?>"><strong>Género: <?= $genero ?></strong> </p>
-        <p class="title is-5 <?= $text_color ?>"><strong>Probabilidad: <?= $probabilidad ?></strong>%</p>
+        <p class="title is-5 <?= $text_color ?>"><strong>Edad: <?= $edad ?></strong> </p>
+        <p class="title is-5 <?= $text_color ?>"><strong>Etapa de Vida: <?= $etapa ?></strong></p>
+
     </div>  
 </body>
 
