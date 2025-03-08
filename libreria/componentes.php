@@ -28,7 +28,7 @@ function get_lista_apis(){
             'nombre'=>'Clima en República Dominicana 🌦️',
             'descripcion'=>'Muestra el clima actual en RD',
             'url'=>'Eje_4',
-            'api'=>''
+            'api'=>'https://api.openweathermap.org/data/2.5/weather?lat=18.48&lon=-69.92&appid='
         ),
         array(
             'nombre'=>'Información de un Pokémon ⚡',

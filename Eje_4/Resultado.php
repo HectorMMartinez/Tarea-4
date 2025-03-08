@@ -1,7 +1,7 @@
 <?php
 require("../libreria/motor.php");
 
-$n=1;
+$n=4;
 $api=(object)get_api($n);
 if(!$api){
     echo '
@@ -14,46 +14,58 @@ if(!$api){
     exit();
 }
 
-if (!$_POST || !isset($_POST['nombre'])) {
-    echo "<div class='notification is-warning'><h3 class='title is-4'>⚠ No se ha enviado el nombre</h3></div>";
-    exit();
-}
-
-$nombre = $_POST['nombre'];
-$url = $api->api."{$nombre}";
-
+$key='cbfa8c801a1d80a4175ae058cba5bb59';
+$unidad = isset($_POST['unidad']) ? $_POST['unidad'] : 'Standard';
+$url = $unidad === 'Standard' ? "{$api->api}{$key}" : "{$api->api}{$key}&units={$unidad}";
+$simbolo=$unidad=='Metric' ? "C" : ( $unidad=='Imperial' ? "F" : 'K' );
 $respuesta = file_get_contents($url);
 $respuesta = json_decode($respuesta);
 
-if (!$respuesta || !isset($respuesta->gender)) {
-    echo "<div class='notification is-danger'><h3 class='title is-4'>❌ Error: No se pudo obtener la información</h3></div>";
-    exit();
+$ciudad = isset($respuesta->name) ? $respuesta->name : 'Desconocido';
+$pais = isset($respuesta->sys->country) ? $respuesta->sys->country : 'Desconocido';
+$temperatura = isset($respuesta->main->temp) ? round($respuesta->main->temp, 1) : 'No disponible';
+$descripcion = isset($respuesta->weather[0]->description) ? ucfirst($respuesta->weather[0]->description) : 'No disponible';
+$humedad = isset($respuesta->main->humidity) ? $respuesta->main->humidity : 'No disponible';
+$presion = isset($respuesta->main->pressure) ? $respuesta->main->pressure : 'No disponible';
+$viento = isset($respuesta->wind->speed) ? round($respuesta->wind->speed, 1) : 'No disponible';
+
+
+$condicion = strtolower($respuesta->weather[0]->main);
+$icono_api = $respuesta->weather[0]->icon;
+$icono = "☁️"; 
+$color = "has-background-grey-light";
+if (strpos($condicion, 'clear') !== false) {
+    $icono = "☀️";
+    $color = "has-background-warning-light";
+} elseif (strpos($condicion, 'rain') !== false) {
+    $icono = "🌧️";
+    $color = "has-background-info-light";
+} elseif (strpos($condicion, 'cloud') !== false) {
+    $icono = "☁️";
+    $color = "has-background-grey-light";
 }
 
-$esHombre = $respuesta->gender == "male";
-$background_color = $esHombre ? "has-background-info" : "has-background-danger-light"; 
-$text_color = $esHombre ? "has-text-white" : "has-text-danger"; 
-$icono = $esHombre ? "👦" : "👧";
-$genero = $esHombre ? "Hombre" : "Mujer";
-$probabilidad = round($respuesta->probability * 100, 2);
 ?>
 <head>
     <link rel="stylesheet" href="../bulma-1.0.2/bulma/css/bulma.css">
     <style>
-    html, body {
-        overflow: hidden;
-    }
-</style>
+        html, body {
+            overflow: hidden;
+        }
+    </style>
 
 </head>
 <body>
-    <div class="box <?= $background_color ?> has-text-centered">
-        <h1 class="title is-3 <?= $text_color ?>">Resultado <?= $icono ?></h1>
-        <p class="title is-5 <?= $text_color ?>"><strong>Nombre: <?= htmlspecialchars($respuesta->name)?> </strong> </p>
-        <p class="title is-5 <?= $text_color ?>"><strong>Género: <?= $genero ?></strong> </p>
-        <p class="title is-5 <?= $text_color ?>"><strong>Probabilidad: <?= $probabilidad ?></strong>%</p>
-    </div>  
+
+<div class="box <?= $color ?> has-text-centered">
+        <h1 class="title is-3"><?= $icono ?> Clima en <?= $ciudad ?>, <?= $pais ?></h1>
+        <figure class="image is-128x128 is-inline-block">
+            <img src="https://openweathermap.org/img/wn/<?= $icono_api ?>@2x.png" alt="Weather Icon">
+        </figure>
+        <p class="title has-text-white is-4"><strong>🌡️ Temperatura:</strong> <?= $temperatura ?> °<?= $simbolo ?></p>
+        <p class="subtitle has-text-white is-5"><strong>📌 Condiciones: <?= $descripcion ?> </strong></p>
+        <p class="subtitle has-text-white is-5"><strong>💧 Humedad: <?= $humedad ?>%</strong></p>
+        <p class="subtitle has-text-white is-5"><strong>🌬️ Viento: <?= $viento ?> km/h </strong></p>
+        <p class="subtitle has-text-white is-5"><strong>📊 Presión:<?= $presion ?> hPa </strong></p>
+    </div>
 </body>
-
-
-

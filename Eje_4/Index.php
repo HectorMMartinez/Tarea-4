@@ -1,7 +1,7 @@
 <?php
 require("../libreria/motor.php");
 plantilla::aplicar();
-$n=1;
+$n=4;
 $api=(object)get_api($n);
 if(!$api){
     echo '
@@ -15,11 +15,17 @@ if(!$api){
 <h1 class="title"> <?php echo $api->nombre; ?> </h1>
 <p class="subtitle"> <?php echo $api->descripcion;?></p>
 <div class="content columns">
-    <form class="column is-4" method="post" action="Eje_1/Resultado.php" target="resultado">
+    <form class="column is-4" method="post" action="Eje_4/Resultado.php" target="resultado">
         <div class="field">
-            <label class="label" for> Nombre: </label>
+            <label class="label" for> Unidad: </label>
             <div class="control ">
-                <input class="input" type="text" name="nombre" placeholder="Ingresa un nombre" required>
+                <div class="select">
+                    <select name="unidad">
+                        <option value="Standard">Standard °K</option>
+                        <option value="Metric">Metrico °C</option>
+                        <option value="Imperial">Imperial °F</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="field">
@@ -35,7 +41,7 @@ if(!$api){
         var iframe = document.getElementById("resultadoFrame");
         if (iframe && iframe.contentWindow.document.documentElement) {
             iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + "px";
-            iframe.style.overflow = "hidden"; // Prevents scrollbar inside iframe
+            iframe.style.overflow = "hidden";
         }
     }
 
