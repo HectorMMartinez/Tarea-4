@@ -35,7 +35,7 @@ if(!$api){
         var iframe = document.getElementById("resultadoFrame");
         if (iframe && iframe.contentWindow.document.documentElement) {
             iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + "px";
-            iframe.style.overflow = "hidden"; // Prevents scrollbar inside iframe
+            iframe.style.overflow = "hidden"; 
         }
     }
 

@@ -45,6 +45,7 @@ $habilidades = array_map(function($habilidad) {
 }, $respuesta->abilities);
 
 $tipo_principal = isset($respuesta->types[0]) ? strtolower($respuesta->types[0]->type->name) : "normal";
+$tipo_principal= ucfirst($tipo_principal);
 $colores_tipos = [
     "fire" => ["has-background-danger-light", "has-text-danger-dark"],
     "water" => ["has-background-info-light", "has-text-info-dark"],
@@ -80,8 +81,8 @@ $color_texto = isset($colores_tipos[$tipo_principal]) ? $colores_tipos[$tipo_pri
                 </figure>
             </div>
             <div class="column">
-                <p class="title is-3 <?= $color_texto ?>"><strong>⭐ Experiencia Base:<?= $experiencia ?></p>
-                <p class="title is-3 <?= $color_texto ?>"><strong>Tipo:<?= $tipo_principal?></p>
+                <p class="title is-3 <?= $color_texto ?>"><strong>⭐ Experiencia Base: <?= $experiencia ?></p>
+                <p class="title is-3 <?= $color_texto ?>"><strong>Tipo: <?= $tipo_principal?></p>
                 <p class="title is-4 <?= $color_texto ?>">🛡️ Habilidades:</p>
                 <ul class="subtitle is-5 <?= $color_texto ?>">
                     <?php foreach ($habilidades as $habilidad): ?>
